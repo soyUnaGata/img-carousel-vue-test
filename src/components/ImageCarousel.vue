@@ -115,24 +115,25 @@
     }
 
     .slide{
-    width: 30%;
-    object-fit: contain;
-    display: none;
-    cursor: pointer;
+        width: 30%;
+        object-fit: contain;
+        display: none;
+        cursor: pointer;
+        transition: border .25s ease-in-out;
     }
     .slide img {
-    width: 100%;
-    border-radius: 24px;
-    object-fit: cover;
-    height: 320px;
+        width: 100%;
+        border-radius: 24px;
+        object-fit: cover;
+        height: 320px;
     }
     .slide--active{
-    display: block;
+        display: block;
     }
     .slide--selected{
-    border-radius: 24px;
-    border: 5px solid rgb(13, 202, 240);
-    background-color: rgb(13, 202, 240);;
+        border-radius: 24px;
+        border: 5px solid rgb(13, 202, 240);
+        background-color: rgb(13, 202, 240);
     }
 
     img{
