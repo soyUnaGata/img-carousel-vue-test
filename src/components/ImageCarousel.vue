@@ -148,4 +148,10 @@
     .btn.nex__img svg{
     transform: rotate(180deg);
     }
+
+    @media screen and (max-width: 576px) {
+      .slide{
+        width: 100%;
+      }
+    }
 </style>
