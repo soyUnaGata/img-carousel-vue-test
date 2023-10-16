@@ -18,21 +18,14 @@
     data(){
       return {
         currentImgIndex: 0,
-        selected: null,
-      }
-    },
-    watch: {
-      selected: {
-        handler: function(value) {
-          if (!value || value.displayed) return;
-          this.selected = null;
-        },
-        deep: true
+        selected: [],
       }
     },
     methods:{
       select(img) {
-        this.selected = img;
+        const hasImage = this.selected.some(t => t === img);
+        if (hasImage) this.selected = this.selected.filter(t => t !== img);
+        else this.selected.push(img);
       },
 
       prev() {
@@ -74,7 +67,7 @@
         <div class="slider__wrapper">
             <div v-for="(image, index) in images" :style="{ order: image.order }"
               class="slide" 
-              :class="{ 'slide--active': image.displayed, 'slide--selected': selected === image }"
+              :class="{ 'slide--active': image.displayed, 'slide--selected': selected.some(t => t === image) }"
               @click="select(image)">
               <img :src="image.url" alt="">
             </div>
@@ -85,7 +78,7 @@
         </button>
       </div>
       <div class="image__info" v-if="selected">
-        <span>{{ selected.url }}</span>
+        <p v-for="img in selected">{{ img.url }}</p>
       </div>
     </div>
 </template>
@@ -110,7 +103,8 @@
     .image__info{
     width: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     font-style: italic;
     }
 
