@@ -15,8 +15,18 @@
     emits: {
         'overscrolled': () => true
     },
+    watch: {
+      'images.length': function(value, oldValue){
+        if (oldValue !== 0) return;
+
+        for (let i = 0; i < this.count; i++) {
+          this.viewed.push(this.images[i]);
+        }
+      }
+    },
     data(){
       return {
+        viewed: [],
         currentImgIndex: 0,
         selected: [],
       }
@@ -29,29 +39,24 @@
       },
 
       prev() {
-        const index = this.currentImgIndex + this.count;
-        this.images.at(index).displayed = false;
-        
-        const img = this.images.at(this.currentImgIndex);
-        img.displayed = true;
-        img.order = this.currentImgIndex;
-
-        this.currentImgIndex = this.currentImgIndex - 1;
+        const index = this.currentImgIndex - 1;
+        this.viewed.pop();
+        this.viewed.unshift(this.images.at(index));
+        this.currentImgIndex = index;
       },
       
       async next() {
-        this.images.at(this.currentImgIndex).displayed = false;
-
         const index = this.currentImgIndex + this.count;
-
         if (index >= this.images.length) await this.$emit('overscrolled');
 
-        const img = this.images.at(index);
-
-        img.displayed = true;
-        img.order = this.currentImgIndex;
-
+        this.viewed.shift();
+        this.viewed.push(this.images.at(index));
         this.currentImgIndex = this.currentImgIndex + 1;
+      }
+    },
+    mounted() {
+      for (let i = 0; i < this.count; i++) {
+        this.viewed.push(this.images[i]);
       }
     }
   }
@@ -65,9 +70,9 @@
         </button>
 
         <div class="slider__wrapper">
-            <div v-for="(image, index) in images" :style="{ order: image.order }"
+            <div v-for="(image, index) in viewed"
               class="slide" 
-              :class="{ 'slide--active': image.displayed, 'slide--selected': selected.some(t => t === image) }"
+              :class="{ 'slide--selected': selected.some(t => t === image) }"
               @click="select(image)">
               <img :src="image.url" alt="">
             </div>
@@ -111,7 +116,6 @@
     .slide{
         width: 30%;
         object-fit: contain;
-        display: none;
         cursor: pointer;
         transition: border .25s ease-in-out;
     }

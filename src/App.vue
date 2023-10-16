@@ -28,22 +28,13 @@
 
     methods:{
       async addImagesToList(){
-        const list = await api.list(this.page, this.count);
-        const ordered = list.map((img, i) => ({ ...img, order: this.images.length + i }))
-        this.images = this.images.concat(ordered);
+        this.images = this.images.concat(await api.list(this.page, this.count));
         this.page++;
-      },
-
-      displayImages(){
-        for (let i = 0; i < this.slideCount; i++){
-          this.images.at(i).displayed = true;
-        }
       }
     },
     async mounted() {
       this.isMobile = window.innerWidth <= constants.MOBILE_WIDTH;
       await this.addImagesToList();
-      this.displayImages();
     }
   }
 </script>
